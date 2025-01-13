@@ -1,6 +1,6 @@
-# SENAC Finance
+# QuickFinance
 
-SENAC Finance é uma aplicação robusta desenvolvida em Python, com foco na gestão de usuários e operações financeiras relacionadas a empréstimos. O sistema possui funcionalidades de cadastro, autenticação de usuários, simulação de empréstimos, acompanhamento de parcelas, geração de relatórios e muito mais. A aplicação adota uma interface gráfica moderna e responsiva construída com a biblioteca `CustomTkinter`.
+QuickFinance é uma aplicação robusta desenvolvida em Python, com foco na gestão de usuários e operações financeiras relacionadas a empréstimos. O sistema possui funcionalidades de cadastro, autenticação de usuários, simulação de empréstimos, acompanhamento de parcelas, geração de relatórios e muito mais. A aplicação adota uma interface gráfica moderna e responsiva construída com a biblioteca `CustomTkinter`.
 
 ## Funcionalidades Principais
 

@@ -48,7 +48,7 @@ class BackEnd():
     #conecta o banco de dados
     def conecta_db(self):
         try:
-            self.conn = sqlite3.connect('data\senac-finance.db')
+            self.conn = sqlite3.connect('data\quick-finance.db')
             self.cursor = self.conn.cursor()
             print('Banco de dados conectado')
         except sqlite3.Error as e:
@@ -132,7 +132,7 @@ class BackEnd():
     def update_payment_status(self):
         """Atualiza o status das parcelas atrasadas."""
         self.conecta_db()
-        today = datetime.now().strftime('%d/%m/%Y')  # Formato ISO
+        today = datetime.now().strftime('%d/%m/%Y')
         try:
             # Atualiza o status das parcelas vencidas
             self.cursor.execute('''
@@ -174,7 +174,7 @@ class BackEnd():
             status = self.cursor.fetchone()
             print(f"Status atual: {status[0] if status else 'não encontrado'}")  # Ajustado para evitar erro de sintaxe
 
-            messagebox.showinfo('Sucesso', 'Pagamento realizado com sucesso!')
+            messagebox.showinfo('Sucesso', f"Pagamento da parcela {parcela_id} realizado com sucesso.\nO valor será debitado do seu cartão cadastrado.")
         except sqlite3.Error as e:
             messagebox.showerror('Erro', f'Erro ao processar pagamento: {e}')
         finally:
@@ -182,7 +182,6 @@ class BackEnd():
 
     #busca as parcelas
     def fetch_installments(self, emprestimo_id):
-        """Busca todas as parcelas de um empréstimo."""
         self.conecta_db()
         try:
             self.cursor.execute('''
@@ -201,17 +200,17 @@ class BackEnd():
     def generate_report(self, report_type):
         try:
             if report_type == 'clientes':
-                # Consultar todos os usuários
+                #consulta todos os usuários
                 self.conecta_db()
                 self.cursor.execute('SELECT name, username, cpf, rg, email FROM Usuarios')
                 users = self.cursor.fetchall()
                 
-                # Criar um DataFrame
+                #cria um DataFrame
                 df = pd.DataFrame(users, columns=['Nome', 'Username', 'CPF', 'RG', 'Email'])
                 report_name = "relatorio_clientes.xlsx"
             
             elif report_type == 'emprestimos':
-                # Consultar todos os empréstimos
+                #consulta todos os empréstimos
                 self.conecta_db()
                 self.cursor.execute('''
                     SELECT u.name, e.valor_emprestimo, e.prim_data_pagamento, e.num_parcelas
@@ -220,26 +219,26 @@ class BackEnd():
                 ''')
                 loans = self.cursor.fetchall()
                 
-                # Criar um DataFrame
+                #cria um DataFrame
                 df = pd.DataFrame(loans, columns=['Nome do Cliente', 'Valor do Empréstimo', 'Data da 1ª Parcela', 'Parcelas'])
                 report_name = "relatorio_emprestimos.xlsx"
             
-            # Abrir um diálogo para salvar o arquivo
+            #path para salvar arquivo
             file_path = filedialog.asksaveasfilename(defaultextension=".xlsx",
                                                     filetypes=[("Excel files", "*.xlsx")],
                                                     initialfile=report_name)
             if file_path:
-                # Limpar o DataFrame removendo linhas vazias
+                #limpa o DataFrame para linhas vazias
                 df = df.dropna(how='all')
 
                 with pd.ExcelWriter(file_path, engine='xlsxwriter') as writer:
-                    # Escrever os dados sem índice
+                    #escreve os dados sem indice
                     df.to_excel(writer, sheet_name='Dados', index=False)
                     
                     workbook = writer.book
                     worksheet = writer.sheets['Dados']
                     
-                    # Definir os formatos
+                    #define os formatos
                     format_header = workbook.add_format({
                         'bold': True,
                         'font_size': 12,
@@ -251,7 +250,7 @@ class BackEnd():
                         'border': 1
                     })
 
-                    # Formatando as células
+                    #formata as células
                     format_cells = workbook.add_format({
                         'font_name': 'Poppins',
                         'align': 'center',
@@ -259,6 +258,7 @@ class BackEnd():
                         'border': 1
                     })
 
+                    #formatação monetária
                     format_currency = workbook.add_format({
                         'num_format': '#,##0.00',
                         'font_name': 'Poppins',
@@ -267,7 +267,7 @@ class BackEnd():
                         'border': 1
                     })
 
-                    # Função para calcular largura da coluna
+                    #função para calcular a coluna
                     def get_column_width(series, column_name):
                         # Largura do cabeçalho
                         max_header_length = len(str(column_name))
@@ -280,12 +280,12 @@ class BackEnd():
                         base_width = max(max_header_length, max_content_length)
                         return base_width + 4
 
-                    # Configurar as larguras das colunas
+                    #configura as larguras das colunas
                     for col_num, column in enumerate(df.columns):
                         width = get_column_width(df[column], column)
                         worksheet.set_column(col_num, col_num, width)
 
-                    # Criar uma tabela Excel
+                    #cria uma tabela Excel
                     table_range = f'A1:{chr(65 + len(df.columns) - 1)}{len(df) + 1}'
                     worksheet.add_table(table_range, {
                         'name': 'DadosTabela',
@@ -300,7 +300,7 @@ class BackEnd():
                         'autofilter': True  # Adiciona filtros automáticos
                     })
 
-                    # Ajustar altura das linhas
+                    #ajusta altura das linhas
                     worksheet.set_row(0, 30)  # Altura do cabeçalho
                     for row in range(1, len(df) + 1):
                         worksheet.set_row(row, 20)  # Altura das células de dados
@@ -311,8 +311,9 @@ class BackEnd():
             messagebox.showerror("Erro", f"Erro ao gerar relatório: {e}")
         finally:
             self.desconecta_db()
+
     #reseta as tabelas
-    '''def reset_tables(self):
+    def reset_tables(self):
         self.conecta_db()
         try:
             self.cursor.execute('DROP TABLE IF EXISTS DetailsEmprestimos')
@@ -320,7 +321,7 @@ class BackEnd():
             self.conn.commit()
         finally:
             self.desconecta_db()
-        self.create_tabela()'''
+        self.create_tabela()
 
     #registra o usuários no banco de dados
     #e tratamento de exceções
@@ -509,19 +510,20 @@ class BackEnd():
     def get_loans_from_db(self):
         loans = []
         try:
-            # Conectar ao banco de dados
+            #conecta ao banco de dados
             self.conecta_db()
             
-            # Consultar empréstimos
+            #Consulta empréstimos do usuário logado
             self.cursor.execute('''
                 SELECT valor_emprestimo, prim_data_pagamento, num_parcelas 
                 FROM Emprestimos
-            ''')
+                WHERE username = ?
+            ''', (self.username_logged_in,))
             
-            # Recuperar os resultados
+            #recupera os resultados
             rows = self.cursor.fetchall()
             
-            # Organizar os dados em um formato adequado para exibição
+            #organiza os dados em um formato adequado para exibição
             for row in rows:
                 loan = {
                     "valor_emprestimo": row[0],  # valor do empréstimo
@@ -532,7 +534,6 @@ class BackEnd():
         except sqlite3.Error as e:
             print(f"Erro ao consultar empréstimos: {e}")
         finally:
-            # Desconectar do banco
             self.desconecta_db()
         
         return loans
@@ -661,7 +662,7 @@ class Application(ctk.CTk, BackEnd):
         position_y = (screen_height // 2) - (window_height // 2)
         window.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
         #window.geometry('800x800')
-        window.title('SENAC FINANCE')
+        window.title('QUICKFINANCE')
         window.iconbitmap('images/icon-310x310.ico')
         window.resizable(False, False)
 
@@ -702,7 +703,7 @@ class Application(ctk.CTk, BackEnd):
             details_window = ctk.CTkToplevel()
             details_window.title("Detalhes do Empréstimo")
             details_window.geometry("800x600")
-            details_window.iconbitmap('images/logosenacfinance-32x32.png')
+            details_window.iconbitmap('images/logoquickfinance-32x32.png')
 
             details_window.attributes('-topmost', True)  # Faz a janela ser a principal e ficar em cima
             details_window.lift()  # Levanta a janela
@@ -804,7 +805,7 @@ class Application(ctk.CTk, BackEnd):
         self.frame_login.pack(pady=120)
 
         #logo no frame de login
-        self.logoimg = ctk.CTkImage(Image.open(r"images/logosenacfinancefront.png"), size=(228, 104))
+        self.logoimg = ctk.CTkImage(Image.open(r"images/logoquickfinancefront.png"), size=(228, 104))
         self.label_logoimg = ctk.CTkLabel(master=self.frame_login, image=self.logoimg, text=None)
         self.label_logoimg.place(x=90, y=20)
 
@@ -850,7 +851,7 @@ class Application(ctk.CTk, BackEnd):
         self.login_button.place(x=25, y=385)
 
         #span para mostrar se não há cadastro
-        self.register_span = ctk.CTkLabel(master=self.frame_login, text="Ao continuar, você concorda com os Termos \nde Serviço e a Política de Privacidade do Senac Finance", text_color="gray")
+        self.register_span = ctk.CTkLabel(master=self.frame_login, text="Ao continuar, você concorda com os Termos \nde Serviço e a Política de Privacidade do QuickFinance", text_color="gray")
         self.register_span.place(x=45, y=440)
 
         #botão para realizar o cadastro
@@ -877,7 +878,7 @@ class Application(ctk.CTk, BackEnd):
         self.frame_login.pack(pady=120)
 
         #logo no frame de login
-        self.logoimg = ctk.CTkImage(Image.open(r"images/logosenacfinancefront.png"), size=(228, 104))
+        self.logoimg = ctk.CTkImage(Image.open(r"images/logoquickfinancefront.png"), size=(228, 104))
         self.label_logoimg = ctk.CTkLabel(master=self.frame_login, image=self.logoimg, text=None)
         self.label_logoimg.place(x=90, y=20)
 
@@ -926,7 +927,7 @@ class Application(ctk.CTk, BackEnd):
         self.login_button.place(x=25, y=385)
 
         #span para mostrar se não há cadastro
-        self.register_span = ctk.CTkLabel(master=self.frame_login, text="Ao continuar, você concorda com os Termos \nde Serviço e a Política de Privacidade do Senac Finance", text_color="gray")
+        self.register_span = ctk.CTkLabel(master=self.frame_login, text="Ao continuar, você concorda com os Termos \nde Serviço e a Política de Privacidade do QuickFinance", text_color="gray")
         self.register_span.place(x=45, y=440)
 
         #botão para realizar o cadastro
@@ -1376,7 +1377,7 @@ class Application(ctk.CTk, BackEnd):
         position_y = (screen_height // 2) - (main_window_height // 2)
         main_window.geometry(f"{main_window_width}x{main_window_height}+{position_x}+{position_y}")
         main_window.geometry("1600x900")
-        main_window.title("SENAC FINANCE")
+        main_window.title("QUICKFINANCE")
         main_window.iconbitmap('images/icon-310x310.ico')
         main_window.resizable(False, False)
         main_window.configure(fg_color="#191f27")
@@ -1469,7 +1470,7 @@ class Application(ctk.CTk, BackEnd):
             profile_btn.pack(side="right", padx=10, pady=8)
         
         #logo na sidebar
-        logo_img = ctk.CTkImage(Image.open(r"images/logosenacfinance-32x32.png"), size=(32, 32))
+        logo_img = ctk.CTkImage(Image.open(r"images/logoquickfinance-32x32.png"), size=(32, 32))
         logo_label = ctk.CTkLabel(
             sidebar_frame,
             image=logo_img,
@@ -1951,7 +1952,7 @@ class Application(ctk.CTk, BackEnd):
                 )
                 loan_frame.pack(pady=50)
 
-                imglogo = ctk.CTkImage(Image.open(r"images/logosenacfinancefront.png"), size=(228, 104))
+                imglogo = ctk.CTkImage(Image.open(r"images/logoquickfinancefront.png"), size=(228, 104))
                 logoimg = ctk.CTkLabel(loan_frame, image=imglogo, text=None)
                 logoimg.pack(pady=20)
 
@@ -2158,12 +2159,12 @@ class Application(ctk.CTk, BackEnd):
             topbar()
             self.update_payment_status()
 
-            # Cria o canvas e o frame rolável
+            #cria o canvas e o frame rolável
             canvas = ctk.CTkCanvas(content_frame, bg="#242424", highlightthickness=0)
             scrollbar = ctk.CTkScrollbar(content_frame, orientation="vertical", command=canvas.yview)
             scrollable_frame = ctk.CTkFrame(canvas)
 
-            # Configura o canvas e scrollbar
+            #configura o canvas e scrollbar
             scrollable_frame.bind(
                 "<Configure>",
                 lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
@@ -2177,7 +2178,6 @@ class Application(ctk.CTk, BackEnd):
             scrollable_frame.update_idletasks()
             canvas.configure(scrollregion=canvas.bbox("all"))
             
-            # Bind mouse wheel events
             def _on_mousewheel(event):
                 canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
                 
@@ -2276,7 +2276,7 @@ class Application(ctk.CTk, BackEnd):
 
         #tela de ajuda
         def load_help():
-            messagebox.showinfo("Ajuda", "Para obter ajuda, entre em contato com o suporte através do site https://senacfinance.com.br\nEste projeto está disponível no github, acesse em https://github.com/senacfinance\nProjeto desenvolvido e criado por Chrysto")
+            messagebox.showinfo("Ajuda", "Para obter ajuda, entre em contato com o suporte através do site https://quickfinance.com\nEste projeto está disponível no github, acesse em https://github.com/quickfinance\nProjeto desenvolvido e criado por Chrysto")
 
         #configuração dos botões
         dashboard_btn.configure(command=lambda: switch_screen(load_dashboard))
@@ -2303,7 +2303,7 @@ class Application(ctk.CTk, BackEnd):
         position_y = (screen_height // 2) - (main_window_admin_height // 2)
         main_window_admin.geometry(f"{main_window_admin_width}x{main_window_admin_height}+{position_x}+{position_y}")
         main_window_admin.geometry("1600x900")
-        main_window_admin.title("SENAC FINANCE - Versão Admin")
+        main_window_admin.title("QUICKFINANCE - Versão Admin")
         main_window_admin.iconbitmap('images/icon-310x310.ico')
         main_window_admin.resizable(False, False)
         main_window_admin.configure(fg_color="#191f27")
@@ -2396,7 +2396,7 @@ class Application(ctk.CTk, BackEnd):
             profile_btn.pack(side="right", padx=10, pady=8)
         
         #logo na sidebar
-        logo_img = ctk.CTkImage(Image.open(r"images/logosenacfinance-32x32.png"), size=(32, 32))
+        logo_img = ctk.CTkImage(Image.open(r"images/logoquickfinance-32x32.png"), size=(32, 32))
         logo_label = ctk.CTkLabel(
             sidebar_frame,
             image=logo_img,
@@ -3182,7 +3182,7 @@ class Application(ctk.CTk, BackEnd):
                     details_window = ctk.CTkToplevel()
                     details_window.title("Detalhes do Empréstimo")
                     details_window.geometry("800x600")
-                    details_window.iconbitmap('images/logosenacfinance-32x32.png')
+                    details_window.iconbitmap('images/logoquickfinance-32x32.png')
                     
                     details_window.attributes('-topmost', True)  # Faz a janela ser a principal e ficar em cima
                     details_window.lift()  # Levanta a janela
@@ -3355,7 +3355,7 @@ class Application(ctk.CTk, BackEnd):
 
         #tela de ajuda
         def load_help():
-            messagebox.showinfo("Ajuda", "Para obter ajuda, entre em contato com o suporte através do site https://senacfinance.com.br\nEste projeto está disponível no github, acesse em https://github.com/senacfinance\nProjeto desenvolvido e criado por Chrysto")
+            messagebox.showinfo("Ajuda", "Para obter ajuda, entre em contato com o suporte através do site https://quickfinance.com.br\nEste projeto está disponível no github, acesse em https://github.com/quickfinance\nProjeto desenvolvido e criado por Chrysto")
 
         #configuração dos botões
         dashboard_btn.configure(command=lambda: switch_screen(load_dashboard))
@@ -3373,7 +3373,13 @@ class Application(ctk.CTk, BackEnd):
 
     #função para fechar a aplicação
     def close_application(self):
-        exit()
+        try:
+            self.desconecta_db()
+
+            exit()
+        except Exception as e:
+            print(f"An exception occurred while closing the application: {e}")
+            exit()
     
 if __name__=='__main__':
     app = Application()
