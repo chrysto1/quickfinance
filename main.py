@@ -48,7 +48,7 @@ class BackEnd():
     #conecta o banco de dados
     def conecta_db(self):
         try:
-            self.conn = sqlite3.connect('data\quick-finance.db')
+            self.conn = sqlite3.connect('data/quick-finance.db')
             self.cursor = self.conn.cursor()
             print('Banco de dados conectado')
         except sqlite3.Error as e:
@@ -366,6 +366,7 @@ class BackEnd():
                   bairro, numero, cidade, estado, agencia, conta, tipacc, bancos,
                   pix, convenio))
             self.conn.commit()
+            self.username_logged_in = username
             messagebox.showinfo('Sucesso', f'Usuário {username} registrado com sucesso!')
             self.limpa_entry_register()
             window.destroy()
@@ -378,6 +379,9 @@ class BackEnd():
     #registra o empréstimo
     def loan_register(self, loan_amount, num_installments, first_payment_date, interest_rate, 
     total_interest, total_final):
+        if not self.username_logged_in:
+            messagebox.showerror('Erro', 'Faça login para registrar um empréstimo.')
+        
         try:
             # Verificando se os valores calculados estão disponíveis
             if not hasattr(self, 'calculated_loan_amount'):
@@ -387,7 +391,7 @@ class BackEnd():
             loan_amount = self.calculated_loan_amount
             num_installments = self.calculated_num_installments
             first_payment_date = self.calculated_first_payment_date.strftime("%d/%m/%Y")
-            interest_rate = self.calculated_interest_rate / 100  # Certifique-se de que o percentual esteja no formato correto
+            interest_rate = self.calculated_interest_rate / 100
             total_interest = self.total_interest
             total_final = self.total_final
             
@@ -418,7 +422,7 @@ class BackEnd():
                     total_interest,
                     total_final
                 ))
-                emprestimo_id = self.cursor.lastrowid  # Pegando o ID do último empréstimo inserido
+                emprestimo_id = self.cursor.lastrowid
                 
                 # Inserindo cada parcela
                 for dados in self.dados_mensais:
@@ -1257,7 +1261,7 @@ class Application(ctk.CTk, BackEnd):
 
         #label para retornar resultado
         self.resultado_label = ctk.CTkLabel(master=self.register_frame2, text="", font=("Poppins", 12), text_color="red")
-        self.resultado_label.place(x=300, y=325)
+        self.resultado_label.place(x=290, y=325)
 
         #volta para tela de registro 1  
         def back(): 
@@ -1910,10 +1914,10 @@ class Application(ctk.CTk, BackEnd):
 
             #função para limpar os inputs
             def limpar():
-                loan_amount_entry.delete(0, ctk.END)
-                installments_entry.delete(0, ctk.END)
-                interest_rate_entry.delete(0, ctk.END)
-                first_payment_entry.delete(0, ctk.END)
+                self.loan_amount_entry.delete(0, ctk.END)
+                self.installments_entry.delete(0, ctk.END)
+                self.interest_rate_entry.delete(0, ctk.END)
+                self.first_payment_entry.delete(0, ctk.END)
                 
                 try:  
                     if 'textpass_label' in globals():
@@ -1955,6 +1959,12 @@ class Application(ctk.CTk, BackEnd):
                 imglogo = ctk.CTkImage(Image.open(r"images/logoquickfinancefront.png"), size=(228, 104))
                 logoimg = ctk.CTkLabel(loan_frame, image=imglogo, text=None)
                 logoimg.pack(pady=20)
+
+                if hasattr(self, 'username_logged_in') and self.username_logged_in:
+                    username = self.username_logged_in
+                else:
+                    raise NameError("O nome de usuário não está definido. Certifique-se de que o usuário está logado.")
+
 
                 loanconfirme_label = ctk.CTkLabel(
                     loan_frame, 
