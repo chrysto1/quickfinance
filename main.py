@@ -48,7 +48,7 @@ class BackEnd():
     #conecta o banco de dados
     def conecta_db(self):
         try:
-            self.conn = sqlite3.connect('senac-finance.db')
+            self.conn = sqlite3.connect('data\senac-finance.db')
             self.cursor = self.conn.cursor()
             print('Banco de dados conectado')
         except sqlite3.Error as e:

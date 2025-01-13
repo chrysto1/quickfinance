@@ -1,0 +1,11 @@
+pip install customtkinter
+pip install tkinter
+pip install datetime
+pip install tkcalendar
+pip install re
+pip install requests
+pip install sqlite3
+pip install bcrypt
+pip install PIL
+pip install pandas
+pip install xlsxwriter
