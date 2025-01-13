@@ -1052,7 +1052,7 @@ class Application(ctk.CTk, BackEnd):
         self.date_entry = ctk.CTkEntry(master=self.register_frame, placeholder_text='Nascimento', width=125, height=35, corner_radius=60, font=('Poppins', 14))
         self.date_entry.place(x=225, y=225)
         self.date_entry.bind('<KeyRelease>', lambda e: check_age(self.date_entry.get()))
-        self.calendarimg = ctk.CTkImage(Image.open(r"icons/calendario.png"), size=(20, 20))
+        self.calendarimg = ctk.CTkImage(Image.open(r"images/icons/calendario.png"), size=(20, 20))
         self.button_calendar = ctk.CTkButton(master=self.register_frame, image=self.calendarimg, text=None, width=2, height=32, fg_color='#f78d35', hover_color='#cd3e1e', corner_radius=60, command=open_calendar)
         self.button_calendar.place(x=355, y=225) 
 
@@ -1232,7 +1232,7 @@ class Application(ctk.CTk, BackEnd):
         self.cep_entry.place(x=100, y=165)
 
         #botão cep
-        self.cepimg = ctk.CTkImage(Image.open(r"icons/cep.png"), size=(20, 20))
+        self.cepimg = ctk.CTkImage(Image.open(r"images/icons/cep.png"), size=(20, 20))
         self.button_cep = ctk.CTkButton(master=self.register_frame2, text=None, image=self.cepimg,fg_color='#f78d35', hover_color='#cd3e1e',corner_radius=60, font=("Poppins", 14), width=50, command=buscar_endereco).place(x=360, y=165)
 
         #entrada de logradouro
@@ -1502,14 +1502,14 @@ class Application(ctk.CTk, BackEnd):
             return btn
 
         #icones
-        dashboard_icon = ctk.CTkImage(Image.open(r"icons/dashboard.png"), size=(24, 24))
-        loan_icon = ctk.CTkImage(Image.open(r'icons/loan.png'), size=(24, 24))
-        simulation_icon = ctk.CTkImage(Image.open(r'icons/simulation.png'), size=(24, 24))
-        #reports_icon = ctk.CTkImage(Image.open(r'icons/reports.png'), size=(24, 24))
-        settings_icon = ctk.CTkImage(Image.open(r'icons/settings.png'), size=(24, 24))
-        help_icon = ctk.CTkImage(Image.open(r'icons/help.png'), size=(24, 24))
-        profile_icon = ctk.CTkImage(Image.open(r'icons/profile.png'), size=(20, 24))
-        exit_icon = ctk.CTkImage(Image.open(r'icons/exit.png'), size=(24, 24))
+        dashboard_icon = ctk.CTkImage(Image.open(r"images/icons/dashboard.png"), size=(24, 24))
+        loan_icon = ctk.CTkImage(Image.open(r'images/icons/loan.png'), size=(24, 24))
+        simulation_icon = ctk.CTkImage(Image.open(r'images/icons/simulation.png'), size=(24, 24))
+        #reports_icon = ctk.CTkImage(Image.open(r'images/icons/reports.png'), size=(24, 24))
+        settings_icon = ctk.CTkImage(Image.open(r'images/icons/settings.png'), size=(24, 24))
+        help_icon = ctk.CTkImage(Image.open(r'images/icons/help.png'), size=(24, 24))
+        profile_icon = ctk.CTkImage(Image.open(r'images/icons/profile.png'), size=(20, 24))
+        exit_icon = ctk.CTkImage(Image.open(r'images/icons/exit.png'), size=(24, 24))
 
         #botões da barra lateral
         custom_font = ("Poppins", 12, 'bold')
@@ -2039,7 +2039,7 @@ class Application(ctk.CTk, BackEnd):
                 
             # Inputs
             #input de emprestimo
-            cifrao = ctk.CTkImage(Image.open(r"icons/cifrao.png"), size=(20, 17))
+            cifrao = ctk.CTkImage(Image.open(r"images/icons/cifrao.png"), size=(20, 17))
             cifrao_label = ctk.CTkLabel(simulation_frame, text=None, image=cifrao)
             cifrao_label.place(x=30, y=50)
             self.loan_amount_entry = ctk.CTkEntry(simulation_frame, textvariable=loan_amount_var, placeholder_text='Valor do empréstimo', width=250, height=35, corner_radius=60, font=('Poppins', 14))
@@ -2054,7 +2054,7 @@ class Application(ctk.CTk, BackEnd):
                 return float(value.replace(".", "").replace(",", "."))
 
             #data do primeiro pagamento
-            calendar_icon = ctk.CTkImage(Image.open(r"icons/calendario2.png"), size=(20, 17))
+            calendar_icon = ctk.CTkImage(Image.open(r"images/icons/calendario2.png"), size=(20, 17))
             calendar_label = ctk.CTkLabel(simulation_frame, text=None, image=calendar_icon)
             calendar_label.place(x=30, y=100)
             self.first_payment_entry = ctk.CTkEntry(simulation_frame, placeholder_text='Data primeira parcela', width=250, height=35, corner_radius=60, font=('Poppins', 14))
@@ -2062,14 +2062,14 @@ class Application(ctk.CTk, BackEnd):
             self.first_payment_entry.insert(0, (datetime.now() + timedelta(days=30)).strftime("%d/%m/%Y"))
 
             #numero de parcelas
-            num = ctk.CTkImage(Image.open(r"icons/parcelas.png"), size=(20, 17))
+            num = ctk.CTkImage(Image.open(r"images/icons/parcelas.png"), size=(20, 17))
             num_label = ctk.CTkLabel(simulation_frame, text=None, image=num)
             num_label.place(x=400, y=50)
             self.installments_entry = ctk.CTkEntry(simulation_frame, placeholder_text='Número de parcelas', width=300, height=35, corner_radius=60, font=('Poppins', 14))
             self.installments_entry.place(x=420, y=50)
 
             #taxa de juros
-            percentimg = ctk.CTkImage(Image.open(r"icons/porcent.png"), size=(20, 17))
+            percentimg = ctk.CTkImage(Image.open(r"images/icons/porcent.png"), size=(20, 17))
             percent = ctk.CTkLabel(simulation_frame, text=None, image=percentimg)
             percent.place(x=400, y=103)
             self.interest_rate_entry = ctk.CTkEntry(simulation_frame, placeholder_text='Taxa de juros', width=200, height=35, corner_radius=60, font=('Poppins', 14))
@@ -2428,14 +2428,14 @@ class Application(ctk.CTk, BackEnd):
             return btn
 
         #icones
-        dashboard_icon = ctk.CTkImage(Image.open(r"icons/dashboard.png"), size=(24, 24))
-        loan_icon = ctk.CTkImage(Image.open(r'icons/loan.png'), size=(24, 24))
-        simulation_icon = ctk.CTkImage(Image.open(r'icons/simulation.png'), size=(24, 24))
-        reports_icon = ctk.CTkImage(Image.open(r'icons/reports.png'), size=(24, 24))
-        settings_icon = ctk.CTkImage(Image.open(r'icons/settings.png'), size=(24, 24))
-        help_icon = ctk.CTkImage(Image.open(r'icons/help.png'), size=(24, 24))
-        profile_icon = ctk.CTkImage(Image.open(r'icons/profile.png'), size=(20, 24))
-        exit_icon = ctk.CTkImage(Image.open(r'icons/exit.png'), size=(24, 24))
+        dashboard_icon = ctk.CTkImage(Image.open(r"images/icons/dashboard.png"), size=(24, 24))
+        loan_icon = ctk.CTkImage(Image.open(r'images/icons/loan.png'), size=(24, 24))
+        simulation_icon = ctk.CTkImage(Image.open(r'images/icons/simulation.png'), size=(24, 24))
+        reports_icon = ctk.CTkImage(Image.open(r'images/icons/reports.png'), size=(24, 24))
+        settings_icon = ctk.CTkImage(Image.open(r'images/icons/settings.png'), size=(24, 24))
+        help_icon = ctk.CTkImage(Image.open(r'images/icons/help.png'), size=(24, 24))
+        profile_icon = ctk.CTkImage(Image.open(r'images/icons/profile.png'), size=(20, 24))
+        exit_icon = ctk.CTkImage(Image.open(r'images/icons/exit.png'), size=(24, 24))
 
         #botões da barra lateral
         custom_font = ("Poppins", 12, 'bold')
@@ -2888,7 +2888,7 @@ class Application(ctk.CTk, BackEnd):
                 
             # Inputs
             #input de emprestimo
-            cifrao = ctk.CTkImage(Image.open(r"icons/cifrao.png"), size=(20, 17))
+            cifrao = ctk.CTkImage(Image.open(r"images/icons/cifrao.png"), size=(20, 17))
             cifrao_label = ctk.CTkLabel(simulation_frame, text=None, image=cifrao)
             cifrao_label.place(x=30, y=50)
             self.loan_amount_entry = ctk.CTkEntry(simulation_frame, textvariable=loan_amount_var, placeholder_text='Valor do empréstimo', width=250, height=35, corner_radius=60, font=('Poppins', 14))
@@ -2903,7 +2903,7 @@ class Application(ctk.CTk, BackEnd):
                 return float(value.replace(".", "").replace(",", "."))
 
             #data do primeiro pagamento
-            calendar_icon = ctk.CTkImage(Image.open(r"icons/calendario2.png"), size=(20, 17))
+            calendar_icon = ctk.CTkImage(Image.open(r"images/icons/calendario2.png"), size=(20, 17))
             calendar_label = ctk.CTkLabel(simulation_frame, text=None, image=calendar_icon)
             calendar_label.place(x=30, y=100)
             self.first_payment_entry = ctk.CTkEntry(simulation_frame, placeholder_text='Data primeira parcela', width=250, height=35, corner_radius=60, font=('Poppins', 14))
@@ -2911,14 +2911,14 @@ class Application(ctk.CTk, BackEnd):
             self.first_payment_entry.insert(0, (datetime.now() + timedelta(days=30)).strftime("%d/%m/%Y"))
 
             #numero de parcelas
-            num = ctk.CTkImage(Image.open(r"icons/parcelas.png"), size=(20, 17))
+            num = ctk.CTkImage(Image.open(r"images/icons/parcelas.png"), size=(20, 17))
             num_label = ctk.CTkLabel(simulation_frame, text=None, image=num)
             num_label.place(x=400, y=50)
             self.installments_entry = ctk.CTkEntry(simulation_frame, placeholder_text='Número de parcelas', width=300, height=35, corner_radius=60, font=('Poppins', 14))
             self.installments_entry.place(x=420, y=50)
 
             #taxa de juros
-            percentimg = ctk.CTkImage(Image.open(r"icons/porcent.png"), size=(20, 17))
+            percentimg = ctk.CTkImage(Image.open(r"images/icons/porcent.png"), size=(20, 17))
             percent = ctk.CTkLabel(simulation_frame, text=None, image=percentimg)
             percent.place(x=400, y=103)
             self.interest_rate_entry = ctk.CTkEntry(simulation_frame, placeholder_text='Taxa de juros', width=200, height=35, corner_radius=60, font=('Poppins', 14))
