@@ -35,7 +35,7 @@ QuickFinance é uma aplicação robusta desenvolvida em Python, com foco na gest
 ```plaintext
 ├── main.py         # Arquivo principal da aplicação
 ├── images/         # Imagens utilizados na interface gráfica
-├── icons/          # Icones utilizados na interface gráfica
+   └── icons/       # Icones utilizados na interface gráfica
 ├── data/           # Arquivos de dados, como o banco SQLite
 └── README.md       # Documentação do projeto
 ```
